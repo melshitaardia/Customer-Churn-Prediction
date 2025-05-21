@@ -3,9 +3,20 @@
 
 ## Domain Proyek
 
-Proyek ini berada dalam domain Telekomunikasi. Industri telekomunikasi memiliki tantangan besar dalam mempertahankan pelanggan karena tingginya tingkat perpindahan pelanggan (customer churn). Mendeteksi churn lebih awal memungkinkan perusahaan melakukan intervensi dan meningkatkan loyalitas pelanggan.
+Churn pelanggan adalah masalah yang sangat penting dalam industri telekomunikasi, di mana perusahaan sering kehilangan pelanggan secara tiba-tiba dan tanpa peringatan. Dengan memahami pola-pola yang menyebabkan pelanggan berhenti menggunakan layanan, perusahaan dapat mengambil langkah-langkah proaktif untuk mempertahankan pelanggan dan meningkatkan keuntungan.
 
-Churn dapat mengakibatkan kerugian besar bagi perusahaan. Menurut riset dari Frederick Reichheld (Bain & Company), meningkatkan retensi pelanggan sebesar 5% dapat meningkatkan keuntungan hingga 25–95% (Reichheld, 2001). Oleh karena itu, deteksi churn secara proaktif melalui machine learning dapat menjadi solusi efektif.
+Menurut studi oleh McKinsey & Company (2020), biaya untuk mendapatkan pelanggan baru bisa lima kali lebih tinggi daripada mempertahankan pelanggan yang ada. Oleh karena itu, memprediksi churn menggunakan machine learning bisa memberikan manfaat strategis dalam pengambilan keputusan bisnis.
+
+Dalam proyek ini, digunakan pendekatan klasifikasi untuk memprediksi kemungkinan seorang pelanggan akan berhenti berlangganan (churn) berdasarkan atribut perilaku dan layanan yang digunakan.
+
+📚 Referensi:
+
+McKinsey & Company. (2020). The Value of Customer Retention. https://www.mckinsey.com/business-functions/marketing-and-sales/our-insights/the-three-cs-of-customer-satisfaction-consistency-consistency-consistency
+
+Ahmed, A., & Maheswaran, M. (2019). A Machine Learning Approach to Customer Churn Prediction in Telecom Industry. International Journal of Computer Applications, 178(7), 1–6.
+
+IBM. (n.d.). Predicting Customer Churn with IBM Watson. https://www.ibm.com/blogs/watson-health/predicting-customer-churn/
+
 
 ## Business Understanding
 
