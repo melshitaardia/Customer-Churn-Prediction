@@ -94,9 +94,17 @@ Langkah-langkah persiapan data dilakukan sebagai berikut:
 - Model ansambel berbasis decision tree.
 - Parameter: `n_estimators=100`, `random_state=42`.
 
-### 3. XGBoost Classifier
+### 3. Support Vector Machine (SVM)
+- Cocok untuk klasifikasi dengan margin maksimum.
+- Kernel: RBF (default).
+  
+### 4. XGBoost Classifier
 - Gradient boosting yang kuat dan efisien.
 - Parameter: `use_label_encoder=False`, `eval_metric='logloss'`.
+
+### 5. K-Nearest Neighbors (KNN)
+- Model berbasis kedekatan jarak antar data.
+- Parameter: `n_neighbors=5`.
 
 Setiap model dilatih menggunakan data latih, dan dievaluasi di data uji.
 
@@ -111,12 +119,14 @@ Metrik evaluasi:
 - **ROC-AUC**: seberapa baik model membedakan churn dan tidak churn.
 
 | Model              | Accuracy | Precision | Recall | F1-score | ROC-AUC |
-|-------------------|----------|-----------|--------|----------|---------|
-| LogisticRegression|   80%    |   69%     | 55%    | 61%      | 0.83    |
-| RandomForest       |   79%    |   66%     | 57%    | 61%      | 0.83    |
-| **XGBoost**        | **81%**  | **71%**   | **61%**| **66%**  | **0.84**|
+|------------------- |----------|-----------|--------|----------|---------|
+| **Logistic Regression**|     **0.80** |      **0.65** |   **0.57** |     **0.61** |    **0.83** |
+| Random Forest      |     0.79 |      0.62 |   0.51 |     0.56 |    0.82 |
+| SVM                |     0.79 |      0.63 |   0.52 |     0.57 |    0.79 |
+| XGBoost            |     0.77 |      0.57 |   0.52 |     0.54 |    0.81 |
+| KNN                |     0.75 |      0.53 |   0.57 |     0.55 |    0.77 |
 
-XGBoost dipilih sebagai model terbaik karena menghasilkan metrik paling seimbang.
+Logistic Regression dipilih sebagai model terbaik karena menghasilkan metrik paling seimbang.
 
 ### Dampak Terhadap Business Understanding
 
@@ -153,8 +163,8 @@ print(result_df)
 Hasil Inference:
 |                   | Pedicted | Probability (Churn) | Actual | 
 |-------------------|----------|---------------------|--------|
-|               458 |        0 |                0.28 |      0 | 
-|              3327 |        0 |                0.38 |      0 |
-|              5104 |        0 |                0.00 |      0 |
-|              5089 |        0 |                0.33 |      0 |
-|              3377 |        0 |                0.01 |      0 |  
+|               458 |        0 |                0.18 |      0 | 
+|              3327 |        0 |                0.14 |      0 |
+|              5104 |        0 |                0.03 |      0 |
+|              5089 |        0 |                0.43 |      0 |
+|              3377 |        0 |               0.005 |      0 |  
