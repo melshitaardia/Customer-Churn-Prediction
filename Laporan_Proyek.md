@@ -2,79 +2,166 @@
 
 ## Domain Proyek
 
-Customer churn atau kehilangan pelanggan adalah masalah umum dalam industri telekomunikasi. Kemampuan untuk memprediksi pelanggan mana yang kemungkinan akan berhenti berlangganan sangat penting agar perusahaan dapat mengambil tindakan preventif yang tepat. Proyek ini menggunakan teknik klasifikasi untuk membangun model prediktif churn berdasarkan informasi historis pelanggan.
+Churn pelanggan merupakan tantangan besar di industri telekomunikasi. Perusahaan menghadapi kerugian ketika pelanggan berhenti menggunakan layanan mereka. Biaya mendapatkan pelanggan baru bisa lima kali lebih tinggi dibanding mempertahankan pelanggan lama (McKinsey & Company, 2020). Oleh karena itu, memprediksi churn dengan machine learning memiliki nilai strategis yang tinggi.
 
-Salah satu studi dari [Verbraken et al., 2013](https://doi.org/10.1016/j.eswa.2012.08.009) menunjukkan bahwa metode ensemble seperti Random Forest efektif dalam prediksi churn dengan data yang tidak seimbang. Oleh karena itu, proyek ini mengimplementasikan beberapa algoritma termasuk Random Forest dan Neural Network.
+Dalam proyek ini, digunakan pendekatan klasifikasi untuk memprediksi kemungkinan seorang pelanggan berhenti berlangganan (churn) berdasarkan atribut layanan dan demografis.
+
+📚 Referensi:
+
+- McKinsey & Company. (2020). [The Value of Customer Retention](https://www.mckinsey.com/business-functions/marketing-and-sales/our-insights/the-three-cs-of-customer-satisfaction-consistency-consistency-consistency)
+- Ahmed, A., & Maheswaran, M. (2019). A Machine Learning Approach to Customer Churn Prediction in Telecom Industry.
+- IBM. (n.d.). [Predicting Customer Churn with IBM Watson](https://www.ibm.com/blogs/watson-health/predicting-customer-churn/)
+
+---
 
 ## Business Understanding
 
 ### Problem Statements
-- Bagaimana memprediksi apakah pelanggan akan melakukan churn berdasarkan data historis?
-- Algoritma klasifikasi mana yang memberikan performa terbaik dalam memprediksi churn?
+
+1. Bagaimana memprediksi apakah seorang pelanggan akan berhenti berlangganan (churn) atau tidak berdasarkan data historis pelanggan?
+2. Algoritma machine learning apa yang memberikan hasil terbaik dalam memprediksi churn?
 
 ### Goals
-- Membangun model klasifikasi churn pelanggan.
-- Membandingkan performa Logistic Regression, Random Forest, dan Neural Network.
-- Mengidentifikasi metrik performa terbaik: akurasi, F1-score, dan ROC-AUC.
+
+1. Mengembangkan model machine learning untuk memprediksi pelanggan berisiko churn.
+2. Membandingkan beberapa algoritma untuk memilih model terbaik.
 
 ### Solution Statements
-- Melatih 3 model klasifikasi: Logistic Regression, Random Forest, dan Neural Network (Keras).
-- Menggunakan teknik preprocessing seperti normalisasi dan encoding.
-- Mengukur kinerja model dengan akurasi, F1-score, dan ROC AUC.
-- Menyimpan model terbaik menggunakan `joblib`.
+
+- Menggunakan model klasifikasi: Logistic Regression, Random Forest, dan XGBoost.
+- Evaluasi menggunakan metrik: akurasi, precision, recall, F1-score, dan ROC-AUC.
+
+---
 
 ## Data Understanding
 
-Dataset: [Telco Customer Churn Dataset – Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
+**Sumber Data:**
+[Telco Customer Churn – IBM Sample Data Sets](https://www.ibm.com/communities/analytics/watson-analytics-blog/)
 
-Dataset ini berisi 7.043 baris data pelanggan dengan 21 fitur.
+**Ukuran Dataset:**
+- 7043 baris (pelanggan)
+- 21 kolom (fitur)
 
-### Variabel penting:
-- `gender`, `SeniorCitizen`, `Partner`, `Dependents`: Data demografis pelanggan.
-- `tenure`, `PhoneService`, `InternetService`, dll.: Data layanan yang digunakan.
-- `MonthlyCharges`, `TotalCharges`: Biaya layanan.
-- `Churn`: Target label (Yes/No).
+**Kondisi Data:**
+- Missing value: 11 nilai kosong pada kolom `TotalCharges`.
+- Duplikat: Tidak ditemukan duplikat berdasarkan `customerID`.
+- Outlier: Beberapa nilai tinggi pada `MonthlyCharges`, namun masih masuk akal secara bisnis.
+
+**Deskripsi Fitur:**
+
+| Fitur            | Deskripsi |
+|------------------|----------|
+| customerID       | ID unik pelanggan |
+| gender           | Jenis kelamin pelanggan |
+| SeniorCitizen    | 1 jika pelanggan lansia, 0 jika tidak |
+| Partner          | Apakah memiliki pasangan |
+| Dependents       | Apakah memiliki tanggungan |
+| tenure           | Lama berlangganan (bulan) |
+| PhoneService     | Apakah menggunakan layanan telepon |
+| MultipleLines    | Apakah menggunakan lebih dari satu jalur telepon |
+| InternetService  | Jenis layanan internet |
+| OnlineSecurity   | Apakah menggunakan keamanan online |
+| OnlineBackup     | Apakah menggunakan backup online |
+| DeviceProtection | Proteksi perangkat |
+| TechSupport      | Dukungan teknis |
+| StreamingTV      | Layanan TV streaming |
+| StreamingMovies  | Layanan film streaming |
+| Contract         | Jenis kontrak (bulanan, tahunan, dll.) |
+| PaperlessBilling | Apakah menggunakan tagihan elektronik |
+| PaymentMethod    | Metode pembayaran |
+| MonthlyCharges   | Biaya bulanan |
+| TotalCharges     | Total biaya sepanjang waktu berlangganan |
+| Churn            | Target (1 = churn, 0 = tidak churn) |
+
+---
 
 ## Data Preparation
 
-Tahapan preprocessing:
-- Menghapus kolom yang tidak relevan seperti `customerID`.
-- Menangani missing value (`TotalCharges`).
-- Label encoding untuk kolom kategorikal.
-- Normalisasi fitur numerik menggunakan `MinMaxScaler`.
-- Split data: 80% training, 20% testing.
+Langkah-langkah yang dilakukan:
+
+1. **Menghapus Kolom Tidak Relevan:**
+   - `customerID` dihapus karena tidak memberikan nilai prediktif.
+
+2. **Menangani Missing Value:**
+   - Nilai kosong pada `TotalCharges` diisi dengan median.
+
+3. **Transformasi Kolom:**
+   - `TotalCharges` dikonversi menjadi numerik karena awalnya berbentuk string.
+
+4. **Encoding Fitur Kategorikal:**
+   - Menggunakan One-Hot Encoding untuk fitur seperti `Contract`, `InternetService`, dll.
+
+5. **Normalisasi Fitur Numerik:**
+   - `MonthlyCharges`, `TotalCharges`, dan `tenure` dinormalisasi dengan MinMaxScaler.
+
+6. **Splitting Data:**
+   - Dataset dibagi menjadi data latih dan uji (80%:20%).
+
+---
 
 ## Modeling
 
 Tiga model digunakan:
-1. **Logistic Regression**: Model baseline.
-2. **Random Forest Classifier**: Model ensemble dengan performa kuat terhadap data tidak linear.
-3. **Neural Network (Keras Sequential)**:
-   - 3 layer dense dengan Dropout
-   - Aktivasi `relu` dan `sigmoid`
-   - Optimizer: Adam
-   - Callback: EarlyStopping
 
-## Evaluation
+### 1. Logistic Regression
+- Model linear dasar untuk klasifikasi.
+- Parameter: `penalty='l2'`, `solver='liblinear'`
+- Kelebihan: cepat, interpretatif.
 
-### Metrik evaluasi:
-- **Accuracy**: Proporsi prediksi yang benar.
-- **F1-Score**: Harmoni antara precision dan recall.
-- **ROC-AUC**: Mengukur kemampuan klasifikasi biner dalam membedakan kelas.
+### 2. Random Forest Classifier
+- Ensemble dari decision trees.
+- Parameter: `n_estimators=100`, `max_depth=None`
+- Kelebihan: akurasi tinggi, tahan terhadap overfitting.
 
-### Hasil evaluasi:
-- **Logistic Regression**
-  - Akurasi: ~80%
-  - F1-score: ~0.71
-- **Random Forest**
-  - Akurasi: ~82%
-  - F1-score: ~0.73
-- **Neural Network**
-  - Akurasi: ~85%
-  - F1-score: ~0.76
-  - ROC-AUC: 0.89
-
-Model Neural Network memberikan performa terbaik dan dipilih sebagai model akhir.
+### 3. XGBoost Classifier
+- Model boosting yang fokus pada kesalahan model sebelumnya.
+- Parameter: `learning_rate=0.1`, `max_depth=3`, `n_estimators=100`
+- Kelebihan: performa tinggi untuk dataset tabular.
 
 ---
 
+## Evaluation
+
+Metrik yang digunakan:
+
+- **Accuracy**: rasio prediksi benar.
+- **Precision**: ketepatan prediksi churn.
+- **Recall**: seberapa banyak churn yang terdeteksi.
+- **F1-Score**: rata-rata harmonis antara precision dan recall.
+- **ROC-AUC**: area di bawah kurva ROC.
+
+### Hasil Evaluasi:
+
+| Model               | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
+|---------------------|----------|-----------|--------|----------|---------|
+| Logistic Regression | 0.80     | 0.65      | 0.55   | 0.59     | 0.82    |
+| Random Forest       | 0.83     | 0.70      | 0.60   | 0.64     | 0.85    |
+| XGBoost             | 0.85     | 0.72      | 0.65   | 0.68     | 0.88    |
+
+### Kesimpulan:
+
+Model terbaik adalah **XGBoost**, dengan skor terbaik pada semua metrik. Model ini bisa digunakan untuk memprioritaskan pelanggan berisiko churn untuk intervensi dini.
+
+---
+
+## Inference
+
+Contoh penggunaan model untuk memprediksi pelanggan:
+
+```python
+# Load model
+loaded_model = joblib.load(model_path)
+
+# Prediksi pada 5 sampel
+sample = X_test.sample(5, random_state=1)
+predictions = loaded_model.predict(sample)
+probs = loaded_model.predict_proba(sample)[:, 1]
+
+# Hasil
+result_df = pd.DataFrame({
+    'Predicted': predictions,
+    'Probability (Churn)': probs,
+    'Actual': y_test.loc[sample.index].values
+}, index=sample.index)
+
+print(result_df)
