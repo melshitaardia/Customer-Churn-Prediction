@@ -147,6 +147,7 @@ result_df = pd.DataFrame({
 
 print("Hasil Inference:")
 print(result_df)
+```
 
 ### Contoh hasil:
 Hasil Inference:
