@@ -32,27 +32,48 @@ Menurut studi McKinsey & Company (2020), biaya untuk menarik pelanggan baru bisa
 Dataset yang digunakan adalah [Telco Customer Churn dari IBM via Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn). Dataset ini berisi informasi demografis dan penggunaan layanan pelanggan, serta status apakah pelanggan tersebut churn.
 
 ### Struktur Data:
-- Jumlah baris: 7043
-- Jumlah kolom: 21
+- **Jumlah baris**: 7043  
+- **Jumlah kolom**: 21  
 
 ### Kondisi Data:
-- Terdapat nilai kosong pada kolom `TotalCharges` sebanyak 11 baris.
-- Tidak ditemukan data duplikat.
-- Outlier tidak dihapus karena masih dalam rentang yang wajar secara domain.
+- **Missing Values**: Tidak ditemukan nilai kosong di seluruh kolom.
+- **Data Duplikat**: Tidak ditemukan data yang duplikat.
+- **Statistik Deskriptif (fitur numerik utama)**:
+  - `tenure`: Min = 0 bulan, Max = 72 bulan, Median = 29 bulan
+  - `MonthlyCharges`: Min = \$18.25, Max = \$118.75, Median = \$70.35
+  - `SeniorCitizen`: 16.2% dari pelanggan merupakan lansia (`1`)
 
-### Fitur-Fitur:
-- `customerID`: ID unik pelanggan.
-- `gender`, `Partner`, `Dependents`, `PhoneService`, `MultipleLines`, `InternetService`, `OnlineSecurity`, `OnlineBackup`, `DeviceProtection`, `TechSupport`, `StreamingTV`, `StreamingMovies`, `Contract`, `PaperlessBilling`, `PaymentMethod`: fitur kategorikal.
-- `SeniorCitizen`: biner, 1 untuk lansia, 0 bukan.
-- `tenure`: lamanya pelanggan berlangganan (bulan).
-- `MonthlyCharges`, `TotalCharges`: jumlah biaya yang dibayarkan.
-- `Churn`: target label.
+### Penjelasan Seluruh Fitur:
+
+| Fitur | Deskripsi |
+|-------|-----------|
+| `customerID` | ID unik pelanggan (dihapus saat preprocessing). |
+| `gender` | Jenis kelamin pelanggan (`Male`, `Female`). |
+| `SeniorCitizen` | Apakah pelanggan adalah lansia (1 = ya, 0 = tidak). |
+| `Partner` | Apakah pelanggan memiliki pasangan. |
+| `Dependents` | Apakah pelanggan memiliki tanggungan. |
+| `tenure` | Lama berlangganan (bulan). |
+| `PhoneService` | Apakah pelanggan memiliki layanan telepon. |
+| `MultipleLines` | Apakah pelanggan memiliki lebih dari satu jalur telepon. |
+| `InternetService` | Jenis layanan internet (`DSL`, `Fiber optic`, `No`). |
+| `OnlineSecurity` | Apakah memiliki perlindungan online. |
+| `OnlineBackup` | Apakah memiliki backup online. |
+| `DeviceProtection` | Apakah memiliki perlindungan perangkat. |
+| `TechSupport` | Apakah memiliki bantuan teknis. |
+| `StreamingTV` | Apakah menonton TV streaming. |
+| `StreamingMovies` | Apakah menonton film streaming. |
+| `Contract` | Jenis kontrak (`Month-to-month`, `One year`, `Two year`). |
+| `PaperlessBilling` | Apakah menggunakan tagihan tanpa kertas. |
+| `PaymentMethod` | Metode pembayaran yang digunakan. |
+| `MonthlyCharges` | Biaya bulanan pelanggan. |
+| `TotalCharges` | Total biaya yang dibayar pelanggan. |
+| `Churn` | Target prediksi, apakah pelanggan berhenti (Yes/No). |
 
 ## Data Preparation
 
 Tahapan yang dilakukan untuk persiapan data adalah:
 
-1. **Menghapus Missing Values**: Kolom `TotalCharges` dikonversi ke numerik dan nilai NaN dihapus (11 baris).
+1. **Menghapus Missing Values**: Kolom `TotalCharges` dikonversi ke numerik, dan jika terdapat nilai NaN akan dihapus (namun pada data ini tidak ditemukan).
 2. **Drop Kolom Tidak Relevan**: Kolom `customerID` dihapus karena tidak memiliki kontribusi prediktif.
 3. **Encoding Label**: Label `Churn` diubah menjadi 1 (Yes) dan 0 (No).
 4. **One-Hot Encoding**: Seluruh fitur kategorikal diubah menggunakan teknik one-hot encoding.
@@ -77,7 +98,7 @@ Lima model machine learning digunakan:
 
 3. **Support Vector Machine (SVM)**
    - Memisahkan kelas menggunakan hyperplane.
-   - Parameter: kernel default (RBF)
+   - Parameter: `kernel='rbf'`, `C=1.0`, `gamma='scale'`, `probability=True`
    - Kelebihan: akurat pada ruang fitur tinggi.
    - Kekurangan: lambat di dataset besar.
 
